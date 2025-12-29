@@ -2,24 +2,26 @@
   const navMount = document.getElementById('site-nav');
   if (!navMount) return;
 
-  // --- 1. 狀態判定與路徑修正 (關鍵修改) ---
+  // --- 1. 狀態判定與路徑修正 ---
   const path = location.pathname.split('/').pop() || 'index.html';
   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-
-  // 判斷當前頁面是否在 html 資料夾內
-  // 如果網址包含 '/html/'，代表在內層，需要 '../' 往上跳
-  // 如果沒有，代表在根目錄，使用 './' (當前目錄)
   const isInHtmlFolder = window.location.pathname.includes('/html/');
   const rootPath = isInHtmlFolder ? '../' : './'; 
 
-  // --- 2. 注入導覽列 ---
-  // 注意：下方的 href 全部都改成了 ${rootPath} 開頭
+  // --- 2. 注入導覽列 (新增漢堡按鈕) ---
   navMount.innerHTML = `
     <nav id="site-nav-inner">
       <div class="nav-wrap">
         <a class="logo" href="${rootPath}${isLoggedIn ? 'index.html' : 'homepage.html'}">碳 Bee</a>
+        
+        <button id="mobile-menu-btn" aria-label="選單">
+            <svg width="24" height="24" fill="none" stroke="#064e3b" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+
         <div class="nav-right">
-          <div class="links">
+          <div class="links" id="nav-links">
             <a href="${rootPath}index.html">首頁</a>
             <a href="${rootPath}html/ai_route.html">AI 推薦</a>
             <a href="${rootPath}html/tasks.html">任務</a>
@@ -59,7 +61,7 @@
     </div>
   `;
 
-  // --- 3. 注入 CSS (這裡也要用 rootPath 修正圖片路徑) ---
+  // --- 3. 注入 CSS (大幅修改 RWD 部分) ---
   const style = document.createElement('style');
 
   const indexOnlyBg = (path === 'index.html' || path === '') ? `
@@ -70,7 +72,6 @@
       left: 0; 
       right: 0; 
       height: 550px; 
-      /* 注意這裡：如果是在 html 資料夾，要用 ../image，如果在根目錄，要用 ./image */
       background-image: url("${rootPath}image/upbackground.png") !important;
       background-repeat: no-repeat;
       background-position: right top; 
@@ -86,16 +87,18 @@
 
     #site-nav { position: sticky; top: 0; z-index: 1000; width: 100%; }
     #site-nav-inner { 
-      background: rgba(255, 255, 255, 0.9); 
+      background: rgba(255, 255, 255, 0.95); 
       backdrop-filter: blur(10px); 
       -webkit-backdrop-filter: blur(10px);
       border-bottom: 3px solid #10b981; 
+      position: relative; /* 為了手機版選單定位 */
     }
     #site-nav-inner .nav-wrap { 
       max-width: 1200px; margin: 0 auto; padding: 12px 20px; 
       display: flex; align-items: center; justify-content: space-between; 
     }
     #site-nav-inner .logo { font-weight: 800; color: #064e3b; text-decoration: none; font-size: 1.5rem; }
+    
     #site-nav-inner .links { display: flex; gap: 8px; }
     #site-nav-inner .links a { 
       color: #064e3b; text-decoration: none; padding: 8px 12px; 
@@ -111,7 +114,50 @@
       text-decoration: none; transition: 0.3s;
     }
 
-    /* 跑馬燈樣式 (Marquee) */
+    /* 漢堡按鈕樣式 (預設隱藏) */
+    #mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+    }
+
+    /* RWD 手機版樣式 */
+    @media(max-width: 850px) { 
+        /* 顯示漢堡按鈕 */
+        #mobile-menu-btn { display: block; order: 2; }
+        .nav-right { order: 3; } /* 確保 user icon 在最右邊 */
+        .logo { order: 1; }
+
+        /* 隱藏桌機版連結，改為下拉選單樣式 */
+        #site-nav-inner .links { 
+            display: none; /* 預設隱藏 */
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            flex-direction: column;
+            background: white;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            padding: 10px 0;
+            gap: 0;
+            border-bottom: 2px solid #10b981;
+        }
+
+        /* 當被加上 .open class 時顯示 */
+        #site-nav-inner .links.open {
+            display: flex;
+        }
+
+        #site-nav-inner .links a {
+            border-radius: 0;
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+    }
+
+    /* 跑馬燈樣式 */
     .marquee-container {
       background: #059669; 
       color: white;
@@ -132,46 +178,43 @@
       0% { transform: translate(0, 0); }
       100% { transform: translate(-100%, 0); }
     }
-
-    /* KPI 卡片樣式 */
-    .kpi-row {
-      max-width: 850px !important; 
-      margin: 20px auto 30px 0 !important; 
-      display: grid !important;
-      grid-template-columns: repeat(3, 1fr) !important;
-      gap: 15px !important;
-    }
-    .kpi-card { padding: 12px 15px !important; border-radius: 18px !important; }
-    .kpi-value { font-size: 1.8rem !important; font-weight: 800; }
-
-    @media(max-width: 850px) { #site-nav-inner .links { display: none; } }
   `;
   document.head.appendChild(style);
 
-  // --- 4. 關鍵邏輯：點擊攔截與彈窗 ---
+  // --- 4. 邏輯處理 ---
+  
+  // 4-1. 漢堡按鈕開關邏輯 (新增)
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const navLinks = document.getElementById('nav-links');
+
+  if(menuBtn && navLinks) {
+      menuBtn.addEventListener('click', () => {
+          navLinks.classList.toggle('open');
+      });
+  }
+
+  // 4-2. 既有的連結邏輯 (Active 判定 & 登入攔截)
   const modal = document.getElementById('login-modal');
   const allNavLinks = document.querySelectorAll('#site-nav-inner .links a');
 
   allNavLinks.forEach(link => {
-    // A. 設定 Active 樣式
     const linkHref = link.getAttribute('href');
-    // 因為 href 現在包含 ./ 或 ../，我們只比對檔名
     const linkFilename = linkHref.split('/').pop();
     
-    // 如果當前路徑包含該檔名，則 Active (排除首頁 index.html 的誤判)
     if (path.includes(linkFilename) && linkFilename !== '') {
        link.classList.add('active');
     }
-    // 特殊處理首頁
     if ((path === 'index.html' || path === '') && linkFilename === 'index.html') {
        link.classList.add('active');
     }
 
-    // B. 攔截點擊
     link.addEventListener('click', function(e) {
+      // 點擊連結後，如果是手機版，自動收合選單
+      if(window.innerWidth <= 850 && navLinks.classList.contains('open')) {
+          navLinks.classList.remove('open');
+      }
+
       if (!isLoggedIn) {
-         // 如果未登入，且點擊的不是首頁 (防止首頁點首頁也跳彈窗)
-         // 這裡簡單用 innerText 判斷，或是你可以比對 href
          if (link.innerText !== '首頁') {
             e.preventDefault();
             modal.style.display = 'flex';
@@ -180,12 +223,10 @@
     });
   });
 
-  // 彈窗按鈕功能
   document.getElementById('closeModalBtn').onclick = () => {
     modal.style.display = 'none';
   };
 
-  // 修正：彈窗裡的「立即登入」按鈕也要吃 rootPath
   document.getElementById('goToLoginBtn').onclick = () => {
     window.location.href = `${rootPath}html/auth.html`;
   };
