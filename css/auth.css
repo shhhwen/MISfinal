@@ -1,0 +1,158 @@
+/* --- 1. 配色變數與全域設定 --- */
+:root {
+    --bg: #f0fdf4;           /* 淺綠背景 */
+    --accent: #10b981;       /* 品牌翠綠 (按鈕主色) */
+    --accent-hover: #059669; /* 深綠色 (按鈕懸停) */
+    --text: #064e3b;         /* 深標題綠 */
+    --muted: #6b7280;        /* 灰色文字 */
+    --card-bg: #ffffff;      /* 白色卡片底 */
+    --shadow: 0 10px 25px rgba(6, 78, 59, 0.1);
+}
+
+body {
+    margin: 0;
+    font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+    background-color: var(--bg);
+    /* 背景網格點綴 */
+    background-image: radial-gradient(#d1fae5 0.8px, transparent 0.8px);
+    background-size: 24px 24px;
+    color: var(--text);
+    line-height: 1.6;
+}
+
+/* --- 2. 會員驗證頁面專屬 (Auth Page) --- */
+.auth-container { 
+    max-width: 400px; 
+    margin: 60px auto; 
+    padding: 0 20px; 
+}
+
+.card {
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(16, 185, 129, 0.1);
+}
+
+.tab-group { 
+    display: flex; 
+    gap: 10px; 
+    margin-bottom: 25px; 
+}
+
+.tab { 
+    flex: 1; 
+    text-align: center; 
+    padding: 12px; 
+    cursor: pointer; 
+    border-bottom: 2px solid #eee;
+    color: var(--muted);
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.tab.active { 
+    border-bottom: 2px solid var(--accent); 
+    color: var(--accent); 
+}
+
+.form-group { 
+    margin-bottom: 20px; 
+}
+
+.form-group label { 
+    display: block; 
+    margin-bottom: 8px; 
+    font-weight: 600;
+}
+
+input { 
+    width: 100%; 
+    padding: 12px; 
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    box-sizing: border-box; 
+    background: #f9fafb;
+    font-size: 1rem;
+}
+
+/* 登入註冊按鈕 - 確保顏色對比明顯 */
+.submit-btn { 
+    width: 100%; 
+    background-color: var(--accent) !important; 
+    color: #ffffff !important; 
+    padding: 14px; 
+    border: none; 
+    border-radius: 12px; 
+    cursor: pointer; 
+    font-size: 1.1rem; 
+    font-weight: bold;
+    transition: 0.3s;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    margin-top: 10px;
+}
+
+.submit-btn:hover {
+    background-color: var(--accent-hover) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(16, 185, 129, 0.4);
+}
+
+.msg { 
+    margin-top: 15px; 
+    text-align: center; 
+    font-size: 0.9rem; 
+    min-height: 20px; 
+}
+
+/* --- 3. 儀表板組件 (Index / Dashboard) --- */
+.kpi-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    margin-bottom: 35px;
+}
+
+.kpi-card {
+    background: white;
+    padding: 24px 30px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    border-left: 8px solid var(--accent);
+    transition: 0.3s;
+}
+
+.kpi-card:hover { transform: translateY(-8px); }
+
+.kpi-title { font-size: 1rem; color: #64748b; font-weight: 600; }
+
+.kpi-value {
+    font-size: 2.6rem;
+    font-weight: 800;
+    color: var(--text);
+    display: flex;
+    align-items: baseline;
+}
+
+/* --- 4. 底部廣告與按鈕 --- */
+.bottom-ad {
+    margin-top: 50px;
+    background: linear-gradient(135deg, #064e3b 0%, #10b981 100%);
+    padding: 60px 40px;
+    border-radius: 24px;
+    color: white;
+    text-align: center;
+}
+
+.bottom-ad .btn {
+    display: inline-block;
+    background: white;
+    color: var(--text) !important;
+    padding: 15px 45px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 800;
+    margin-top: 25px;
+    transition: 0.3s;
+}

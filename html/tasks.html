@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>每週任務 - 碳 Bee</title>
+  <link rel="stylesheet" href="../css/tasks.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+  
+  <div id="site-nav"></div>
+
+  <div class="wrap">
+    <header class="page-header">
+      <div>
+        <h2>每週任務</h2>
+        <div class="small">完成每週挑戰，賺取大量碳幣！(每週一 00:00 重置)</div>
+      </div>
+      <div class="stats-card">
+        <div class="stats-label">本週已獲獎勵</div>
+        <div class="stats-value">+<span id="weekly-earnings">0</span> 💰</div>
+      </div>
+    </header>
+
+    <div class="card">
+      <h4 class="card-title"><i class="fas fa-list-check"></i> 本週挑戰</h4>
+      <div id="tasks-container"></div>
+    </div>
+
+    <div class="card">
+      <h4 class="card-title"><i class="fas fa-history"></i> 歷史紀錄 & 獎勵</h4>
+      <div id="history-container"></div>
+    </div>
+  </div>
+
+  <script src="../js/nav.js"></script>
+  
+  <script>
+    // --- 1. 任務資料庫 ---
+    let tasksData = [
+      { id: 't1', icon: '🚌', title: '通勤達人', desc: '本週搭乘大眾運輸 5 次', progress: 3, target: 5, reward: 50, status: 0 },
+      { id: 't2', icon: '🔥', title: '堅持到底', desc: '連續 3 天搭乘大眾運輸', progress: 3, target: 3, reward: 30, status: 1 }, 
+      { id: 't3', icon: '🚲', title: '綠色騎士', desc: '騎乘 YouBike 累計 10 公里', progress: 8.5, target: 10, reward: 40, status: 0 },
+      { id: 't4', icon: '🌅', title: '早鳥行動', desc: '早上 8 點前完成一次打卡', progress: 0, target: 1, reward: 20, status: 0 },
+      { id: 't5', icon: '🤝', title: '推廣大使', desc: '邀請 1 位好友加入平台', progress: 1, target: 1, reward: 100, status: 2 } 
+    ];
+
+    let historyData = [
+      { date: '2025/12/20', title: '完成每週任務：推廣大使', reward: 100 },
+      { date: '2025/12/15', title: '完成每週任務：通勤達人', reward: 50 }
+    ];
+
+    function renderTasks() {
+      const container = document.getElementById('tasks-container');
+      container.innerHTML = '';
+      let weeklyTotal = 0;
+
+      tasksData.forEach(task => {
+        let percent = Math.min((task.progress / task.target) * 100, 100);
+        let btnHtml = '';
+
+        if (task.status === 2) {
+          btnHtml = `<button class="btn-claim" disabled>已領取</button>`;
+          weeklyTotal += task.reward;
+        } else if (task.progress >= task.target) {
+          task.status = 1; 
+          btnHtml = `<button class="btn-claim active" onclick="claimReward('${task.id}')">領取 ${task.reward} 💰</button>`;
+        } else {
+          btnHtml = `<button class="btn-claim" disabled>${task.progress}/${task.target}</button>`;
+        }
+
+        const div = document.createElement('div');
+        div.className = `task-item ${task.status === 2 ? 'completed' : ''}`;
+        div.innerHTML = `
+          <div class="task-icon">${task.icon}</div>
+          <div class="task-info">
+            <div class="task-header">
+              <span class="task-title">${task.title}</span>
+              <span class="task-reward">+${task.reward} 碳幣</span>
+            </div>
+            <div class="task-desc">${task.desc}</div>
+            <div class="progress-bg">
+              <div class="progress-bar" style="width: ${percent}%"></div>
+            </div>
+          </div>
+          <div class="task-action">${btnHtml}</div>
+        `;
+        container.appendChild(div);
+      });
+      document.getElementById('weekly-earnings').innerText = weeklyTotal;
+    }
+
+    function renderHistory() {
+      const container = document.getElementById('history-container');
+      container.innerHTML = '';
+      historyData.forEach(h => {
+        const div = document.createElement('div');
+        div.className = 'history-item';
+        div.innerHTML = `
+          <div class="history-date">${h.date}</div>
+          <div class="history-detail">${h.title}</div>
+          <div class="history-coin">+${h.reward}</div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function claimReward(id) {
+      const task = tasksData.find(t => t.id === id);
+      if (!task) return;
+      task.status = 2;
+      const today = new Date().toLocaleDateString();
+      historyData.unshift({ date: today, title: `完成任務：${task.title}`, reward: task.reward });
+      alert(`🎉 恭喜！獲得 ${task.reward} 碳幣！`);
+      renderTasks();
+      renderHistory();
+    }
+
+    // 初始化執行
+    renderTasks();
+    renderHistory();
+  </script>
+</body>
+</html>

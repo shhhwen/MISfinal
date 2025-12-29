@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>會員驗證 - 碳 Bee</title>
+  <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body>
+  <div id="site-nav"></div>
+  <script src="../js/nav.js"></script>
+
+  <div class="auth-container">
+    <div class="card">
+      <div class="tab-group">
+        <div class="tab active" id="loginTab" onclick="switchTab('login')">登入</div>
+        <div class="tab" id="regTab" onclick="switchTab('reg')">註冊</div>
+      </div>
+
+      <div id="authForm">
+        <h2 id="formTitle">歡迎回來</h2>
+        <div class="form-group">
+          <label>帳號</label>
+          <input type="text" id="username" placeholder="請輸入帳號">
+        </div>
+        <div class="form-group">
+          <label>密碼</label>
+          <input type="password" id="password" placeholder="請輸入密碼">
+        </div>
+        <button class="submit-btn" onclick="handleAuth()" id="actionBtn">登入</button>
+        <div id="feedback" class="msg"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    let mode = 'login';
+    
+    // 獲取使用者清單的輔助函式
+    function getUsers() {
+      const data = localStorage.getItem('users');
+      return data ? JSON.parse(data) : [];
+    }
+    
+    // 初始化檢查：確保 admin 帳號存在
+    function initUsers() {
+      let users = getUsers();
+      // 如果清單中找不到 admin，就補上去
+      if (!users.find(x => x.user === 'admin')) {
+        users.push({user: 'admin', pass: '1234'});
+        localStorage.setItem('users', JSON.stringify(users));
+      }
+    }
+    
+    // 執行初始化
+    initUsers();
+    
+    function switchTab(t) {
+      mode = t;
+      document.getElementById('loginTab').className = t === 'login' ? 'tab active' : 'tab';
+      document.getElementById('regTab').className = t === 'reg' ? 'tab active' : 'tab';
+      document.getElementById('formTitle').innerText = t === 'login' ? '歡迎回來' : '建立新帳號';
+      document.getElementById('actionBtn').innerText = t === 'login' ? '登入' : '註冊帳號';
+      document.getElementById('feedback').innerText = '';
+    }
+    
+    function handleAuth() {
+      const u = document.getElementById('username').value.trim();
+      const p = document.getElementById('password').value.trim();
+      const feedback = document.getElementById('feedback');
+      
+      if (!u || !p) { 
+        feedback.style.color = "red";
+        feedback.innerText = "請填寫帳號與密碼"; 
+        return; 
+      }
+    
+      let users = getUsers();
+    
+      if (mode === 'reg') {
+        if (users.find(x => x.user === u)) {
+          feedback.style.color = "red";
+          feedback.innerText = "此帳號已被註冊";
+        } else {
+          users.push({user: u, pass: p});
+          localStorage.setItem('users', JSON.stringify(users));
+          feedback.style.color = "green";
+          feedback.innerText = "註冊成功！正在切換至登入頁面...";
+          setTimeout(() => switchTab('login'), 1000);
+        }
+      } else {
+        const found = users.find(x => x.user === u && x.pass === p);
+          if (found) {
+            // --- 關鍵修改：存入登入狀態 ---
+            localStorage.setItem('isLoggedIn', 'true'); 
+            
+            feedback.style.color = "green";
+            feedback.innerText = "登入成功，正在跳轉...";
+            setTimeout(() => location.href = '../index.html', 1000);
+        } else {
+          feedback.style.color = "red";
+          feedback.innerText = "帳號或密碼錯誤";
+        }
+      }
+    }
+  </script>
+</body>
+</html>

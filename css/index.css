@@ -1,0 +1,128 @@
+:root {
+    --primary: #10b981;
+    --dark: #064e3b;
+}
+
+body {
+    margin: 0;
+    font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+    background: 
+        linear-gradient(180deg, #bbf7d0 0%, #f0fdf4 400px, #f0fdf4 100%),
+        radial-gradient(circle at top right, #86efac 0%, transparent 30%);
+    background-attachment: fixed;
+    color: var(--dark);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+}
+
+/* KPI 卡片區塊 */
+.kpi-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.kpi-card {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border-left: 10px solid var(--primary);
+    backdrop-filter: blur(10px);
+    transition: 0.3s;
+}
+
+/* --- 上方兩個框框的對齊修正 --- */
+.main-grid { 
+    display: flex; 
+    align-items: stretch; /* 讓左右兩個白色框框外高度一致 */
+    gap: 25px; 
+    margin-bottom: 30px;
+}
+
+.box {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 35px;
+    border-radius: 28px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+}
+
+/* 確保「進七天...」跟「每週任務...」兩個標題水平對齊 */
+.box h3 {
+    margin: 0;
+    line-height: 1.5;
+    font-size: 1.25rem;
+    height: 1.8rem; /* 固定高度讓字體不會因為換行或間距而高低不一 */
+    display: flex;
+    align-items: center;
+}
+
+.main-grid .box:first-child { flex: 1.8; }
+.main-grid .box:last-child { flex: 1.2; }
+
+/* 左側圖表內容區 */
+.chart-wrapper {
+    flex: 1; 
+    position: relative;
+    margin-top: 20px;
+}
+
+/* 右側任務進度內容區 */
+#home-tasks-summary {
+    flex: 1; 
+    margin-top: 20px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+#home-tasks-summary::-webkit-scrollbar { display: none; }
+
+/* ============================================================
+   ⚠️ 廣告框部分（完全沒動，保留你原始設定）
+   ============================================================ */
+.slider-container {
+    position: relative;
+    margin-top: 30px; 
+    width: 100%;
+    max-width: 1300px; 
+    margin-left: auto;
+    margin-right: auto;
+    height: 380px; 
+    overflow: hidden;
+    background-color: #000;
+    border-radius: 30px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+}
+
+.slider-wrapper {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide { min-width: 100%; height: 100%; position: relative; }
+.slide img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+.nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255, 255, 255, 0.2); color: white; border: none; padding: 15px 12px; cursor: pointer; font-size: 20px; z-index: 10; transition: background 0.3s; }
+.nav-btn:hover { background: rgba(255, 255, 255, 0.4); }
+.prev { left: 0; border-radius: 0 5px 5px 0; }
+.next { right: 0; border-radius: 5px 0 0 5px; }
+.dots-container { position: absolute; bottom: 15px; width: 100%; display: flex; justify-content: center; gap: 8px; z-index: 10; }
+.dot { width: 10px; height: 10px; background: rgba(255, 255, 255, 0.5); border-radius: 50%; cursor: pointer; transition: 0.3s; }
+.dot.active { background: white; transform: scale(1.2); }
+/* ============================================================ */
+
+@media (max-width: 768px) {
+    .main-grid { flex-direction: column; }
+    .slider-container { height: 200px; }
+}

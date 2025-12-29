@@ -1,0 +1,120 @@
+/* --- 全域佈局優化 --- */
+body {
+    margin: 0;
+    font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+    background-color: #f0fdf4; 
+    /* 加入淡淡的網格背景，增加專業度 */
+    background-image: radial-gradient(#d1fae5 0.8px, transparent 0.8px);
+    background-size: 24px 24px;
+    color: #064e3b;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* --- KPI 數據列：強制排成一排並增加專業感 --- */
+.kpi-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    margin-bottom: 35px;
+}
+
+/* 核心修正：讓卡片左側綠條更明顯，字體更大 */
+.kpi-card {
+    background: white;
+    padding: 24px 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.08); /* 更柔和的陰影 */
+    border-left: 8px solid #10b981; /* 綠條加寬到 8px */
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.kpi-card:hover {
+    transform: translateY(-8px);
+}
+
+.kpi-title {
+    font-size: 1rem;
+    color: #64748b; /* 改用冷灰色，讓數值更突出 */
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.kpi-value {
+    font-size: 2.6rem; /* 大幅增加數值字體大小 */
+    font-weight: 800;
+    color: #064e3b;
+    display: flex;
+    align-items: baseline;
+    letter-spacing: -1px;
+}
+
+.kpi-unit {
+    font-size: 1.1rem;
+    color: #10b981;
+    margin-left: 8px;
+    font-weight: 500;
+}
+
+/* --- 圖表與消息區域 --- */
+.main-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
+}
+
+.box {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(16, 185, 129, 0.1);
+}
+
+/* 針對 canvas 的外層容器裝飾 */
+#carbonChart {
+    margin-top: 10px;
+}
+
+/* --- 底部廣告：改為更酷的圓角深色漸層 --- */
+.bottom-ad {
+    margin-top: 50px;
+    background: linear-gradient(135deg, #064e3b 0%, #10b981 100%);
+    padding: 60px 40px;
+    border-radius: 24px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(6, 78, 59, 0.15);
+}
+
+.bottom-ad h2 {
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.bottom-ad .btn {
+    display: inline-block;
+    background: white;
+    color: #064e3b !important; /* 強制覆蓋文字顏色 */
+    padding: 15px 45px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 1.1rem;
+    margin-top: 25px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.bottom-ad .btn:hover {
+    transform: scale(1.05);
+    background: #f8fafc;
+}

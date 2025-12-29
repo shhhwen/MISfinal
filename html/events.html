@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>近期活動 — 碳 Bee</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .carousel{height:160px;border-radius:12px;overflow:hidden}
+    .event{padding:12px;border-radius:10px;background:#fff;margin-bottom:10px}
+  </style>
+</head>
+<body>
+  <div id="site-nav"></div>
+  <script src="../js/nav.js"></script>
+
+  <div class="wrap with-side">
+    <main>
+      <div class="card card-lg">
+        <h2>活動看板</h2>
+        <div class="small">探索最新活動與加碼方案</div>
+        <div class="carousel" id="evtCarousel" style="margin-top:12px;background:linear-gradient(90deg,#e6fff2,#f6fff9);"></div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <h3>活動列表</h3>
+        <div id="eventsList" style="margin-top:8px"></div>
+      </div>
+    </main>
+
+    <aside class="side-panel">
+      <h4>熱門任務</h4>
+      <div class="small">完成指定次數可獲得額外碳幣</div>
+      <div style="margin-top:8px"><button class="btn" onclick="location.href='tasks.html'">查看任務</button></div>
+    </aside>
+  </div>
+
+  <script>
+    const carousel = document.getElementById('evtCarousel'); const msgs=['地球日加碼：雙倍碳幣！','開服限定：註冊即得 50 碳幣','好友邀請賽：排行榜贈獎']; let i=0; setInterval(()=>{carousel.textContent=msgs[i]; i=(i+1)%msgs.length},3000);
+    const events = [{t:'地球日加碼',d:'2026-04-22'},{t:'開服限定',d:'即日起'}]; const el=document.getElementById('eventsList'); events.forEach(e=>{const d=document.createElement('div');d.className='event';d.innerHTML=`<div style="font-weight:700">${e.t}</div><div class="small">${e.d}</div>`;el.appendChild(d)})
+  </script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+/* 引入您定義的配色變數 */
+:root {
+--bg: #ffffff;
+--accent: #10b981;
+--muted: #6b7280;
+--card: #f8fffb;
+--text: #064e3b;
+}
+body { background: var(--bg); color: var(--text); margin: 0; font-family: sans-serif; }
+
+/* 確保 wrap 在橫幅下方有正確的間距 */
+.wrap {
+max-width: 1100px; /* 假設您原有的限制 */
+margin: 0 auto;
+padding-left: 20px;
+padding-right: 20px;
+padding-bottom: 60px;
+}
+
+/* 3x1 垂直堆疊卡片 (維持不變) */
+.info-stack { display: flex; flex-direction: column; gap: 20px; }
+/* --- 修改後的 landing.html 卡片樣式 --- */
+.info-stack .card {
+background: var(--card); 
+/* 增加邊框的對比度：使用深綠色的低透明度版本 */
+border: 1.5px solid rgba(6, 78, 59, 0.15); 
+padding: 35px;
+border-radius: 18px;
+/* 強化陰影，讓卡片邊界更明顯 */
+box-shadow: 0 6px 20px rgba(6, 78, 59, 0.05);
+transition: all 0.3s ease;
+box-sizing: border-box;
+}
+
+.info-stack .card:hover {
+transform: translateY(-5px);
+/* 懸停時邊框變為品牌翠綠色 */
+border-color: var(--accent);
+/* 懸停時陰影加深 */
+box-shadow: 0 12px 30px rgba(16, 185, 129, 0.15);
+}
+
+/* 讓標題顏色更深一點，視覺重心更穩 */
+.card h3 { 
+color: var(--text); 
+margin-top: 0; 
+font-size: 1.4rem; 
+margin-bottom: 12px;
+font-weight: 700;
+}
+
+.card p { color: var(--muted); line-height: 1.6; margin-bottom: 0; font-size: 1rem;}
+/* 基礎重設 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Microsoft JhengHei", Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+/* 輪播器外容器 */
+.slider-container {
+    position: relative;
+    width: 100%; 
+    /* 修改處：高度改為 333px (約為 500px 的 2/3) */
+    height: 380px; 
+    overflow: hidden;
+    background-color: #000;
+}
+
+/* 響應式高度調整：手機版也按比例縮小至約 200px */
+@media (max-width: 768px) {
+    .slider-container {
+        height: 200px;
+    }
+}
+
+/* 圖片包裹層 */
+.slider-wrapper {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide {
+    min-width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/* 核心圖片設定 */
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 保持比例填滿，寬度增加時會露出更多上下內容 */
+    object-position: center;
+    display: block;
+}
+
+/* 左右控制按鈕 */
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    padding: 15px 12px;
+    cursor: pointer;
+    font-size: 20px;
+    z-index: 10;
+    transition: background 0.3s;
+}
+
+.nav-btn:hover { background: rgba(255, 255, 255, 0.4); }
+.prev { left: 0; border-radius: 0 5px 5px 0; }
+.next { right: 0; border-radius: 5px 0 0 5px; }
+
+/* 分頁點指示器 */
+.dots-container {
+    position: absolute;
+    bottom: 15px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    z-index: 10;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.dot.active {
+    background: white;
+    transform: scale(1.2);
+}

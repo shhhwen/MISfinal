@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>獎勵商城</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+    :root {
+        --bg:#ffffff;
+        --accent:#10b981;
+        --muted:#6b7280;
+        --card:#f8fffb;
+        --text:#064e3b;
+        --accent:#10b981;
+        --accent-dark:#059669;
+        --accent-light:#d1fae5;
+        
+    }
+
+    body{
+        background:var(--bg);
+        color:var(--text);
+        font-family: 'PingFang TC', sans-serif;
+        color:#064e3b;
+        margin: 0;
+        padding: 0;
+        font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+        background: 
+            linear-gradient(180deg, #bbf7d0 0%, #f0fdf4 400px, #f0fdf4 100%),
+            radial-gradient(circle at top right, #86efac 0%, transparent 30%);
+        background-attachment: fixed;
+        color: var(--dark);
+        /* 這裡確保即使內容很少，背景也會撐開 */
+    }
+    
+
+    .wrap{ margin-top:40px; }
+
+    /* ⭐商城標題 */
+    .header-section{text-align:center;margin-bottom:60px;}
+    .badge-count{
+        background:var(--grass);
+        color:var(--leaf);
+        padding:6px 16px;
+        border-radius:20px;
+        font-size:0.8rem;
+        font-weight:bold;
+    }
+    .header-section h1{
+        font-size:2.2rem;
+        margin:15px 0 10px;
+        font-weight:bold;
+    }
+    .header-section p{
+        font-size:0.9rem;
+        color:#64748B;
+    }
+
+    /* 分類按鈕 */
+    .category-btn.active{
+        background:var(--accent);
+        color:white;
+    }
+
+    /* 商品卡片 */
+    .product-card{
+        border-radius:10px;
+        overflow:hidden;
+        background:#fff;
+        transition:.3s;
+        cursor:pointer;
+    }
+    .product-card:hover{
+        transform:translateY(-4px);
+        box-shadow:0 4px 15px rgba(0,0,0,.1);
+    }
+
+    .points-badge{
+        position:absolute;
+        top:10px;right:10px;
+        background:var(--accent);
+        color:white;
+        border-radius:20px;
+        padding:5px 10px;
+        font-size:14px;
+    }
+
+    .redeem-btn{
+        background:var(--accent);
+        color:white;
+        border:none;
+    }
+
+    /* 1:1 商品圖片 */
+    .product-img-1-1{
+        width:100%;
+        aspect-ratio:1/1;
+        object-fit:cover;
+        border-radius:10px 10px 0 0;
+    }
+
+    .nav { 
+        background: var(--forest); 
+        padding: 15px 5%; /* 5% 的左右內距確保 Logo 不會貼邊 */
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        color: white; 
+    }
+    
+</style>
+</head>
+
+<body>
+    <div id="site-nav"></div>
+    <script src="../js/nav.js"></script>
+
+    <div class="wrap">
+    <div class="container py-4">
+
+        <div class="header-section">
+            <h1>獎勵商城</h1>
+        </div>
+
+        <!-- 類別選單 -->
+        <div class="d-flex gap-3 mb-3 flex-wrap">
+            <button class="btn category-btn active">全部項目</button>
+            <button class="btn category-btn">限時活動</button>
+            <button class="btn category-btn">市政折抵</button>
+            <button class="btn category-btn">超商禮券</button>
+            <button class="btn category-btn">公益捐贈</button>
+            <button class="btn category-btn">交通票券</button>
+            <button class="btn category-btn">吉祥物周邊</button>
+            
+            
+        </div>
+
+        <!-- 搜尋 + 排序 -->
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <input id="searchInput" class="form-control w-50" placeholder="輸入關鍵字搜尋">
+            <select id="sortSelect" class="form-select w-auto">
+                <option value="default">預設排序</option>
+                <option value="low">價格低到高</option>
+                <option value="high">價格高到低</option>
+            </select>
+        </div>
+
+        <!-- 商品列表 -->
+        <div id="productContainer" class="row g-4"></div>
+
+    </div>
+
+    <script>
+        // 商品資料新增分類 category
+        const products = [
+            { id:1, name:"碳bee鑰匙圈", point:1200, image:"../image/key.jpg", category:"吉祥物" },
+            { id:2, name:"碳bee娃娃", point:3000, image:"../image/doll.jpg", category:"吉祥物" },
+            { id:3, name:"7-11 100元禮券", point:1000, image:"../image/711_100.png", category:"超商" },
+            { id:4, name:"全家 100元禮券", point:1000, image:"../image/family_100.png", category:"超商" },
+            { id:5, name:"台北捷運一日票", point:1500, image:"../image/1day.png", category:"交通" },
+            { id:6, name:"藝術文創商品抵用券", point:1500, image:"../image/art_100.png", category:"活動" },
+            { id:7, name:"萊爾富 特濃咖啡買一送一券", point:450, image:"../image/coffee.jpg", category:"超商" },
+            { id:8, name:"水電費50元折抵券", point:500, image:"../image/water.png", category:"政府" },
+            { id:9, name:"【創世基金會】愛心捐贈1000點", point:10000, image:"../image/love_1000.png", category:"公益" },
+            { id:12, name:"碳Bee帆布袋", point:2500, image:"../image/bag.jpg", category:"吉祥物" } ,
+            { id:10, name:"【更生少年關懷協會】愛心捐贈1000點", point:10000, image:"../image/teen_1000.png", category:"公益" },
+            { id:11, name:"【台灣防止虐待動物協會】幫助受虐動物愛心捐贈1000點", point:10000, image:"../image/animal_1000.png", category:"公益" }
+
+        ];
+
+        // 渲染產品卡片
+        function render(list){
+            const container=document.getElementById("productContainer");
+            container.innerHTML="";
+            list.forEach(p=>{
+                container.innerHTML+=`
+                <div class="col-md-3">
+                    <div class="card product-card position-relative p-0">
+                        <div class="points-badge">${p.point} 點</div>
+                        <img src="${p.image}" class="card-img-top product-img-1-1">
+                        <div class="card-body text-center">
+                            <h6 class="fw-bold">${p.name}</h6>
+                            <button class="btn redeem-btn w-100 mt-2"
+                                onclick="alert('兌換 ${p.name}')">立即兌換</button>
+                        </div>
+                    </div>
+                </div>`;
+            });
+        }
+
+        render(products); // 預設顯示全部
+
+        /* 搜尋功能 */
+        document.getElementById("searchInput").addEventListener("input", e=>{
+            const key=e.target.value.toLowerCase();
+            render(products.filter(p=>p.name.toLowerCase().includes(key)));
+        });
+
+        /* 排序功能 */
+        document.getElementById("sortSelect").addEventListener("change",e=>{
+            let sorted=[...products];
+            if(e.target.value==="low") sorted.sort((a,b)=>a.point-b.point);
+            if(e.target.value==="high") sorted.sort((a,b)=>b.point-a.point);
+            render(sorted);
+        });
+
+        /* ⭐ 類別按鈕切換 */
+        const categories=document.querySelectorAll(".category-btn");
+
+        categories.forEach(btn=>{
+            btn.addEventListener("click",()=>{
+                categories.forEach(b=>b.classList.remove("active"));
+                btn.classList.add("active");
+
+                const text=btn.innerText.trim();
+                if(text==="全部項目") return render(products);
+
+                // 自訂分類對應名稱 (你可依需求更換)
+                const map={
+                    "限時活動":"活動",
+                    "市政折抵":"政府",
+                    "超商禮券":"超商",
+                    "公益捐贈":"公益",
+                    "交通票券":"交通",
+                    "吉祥物周邊":"吉祥物"
+                };
+
+                render(products.filter(p=>p.category===map[text]));
+            });
+        });
+    </script>
+
+
+</body>
+</html>

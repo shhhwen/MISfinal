@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>會員個人中心 — 碳 Bee</title>
+    <link rel="stylesheet" href="../css/member.css" />
+
+</head>
+
+<body>
+    <div id="site-nav"></div>
+    <script src="../js/nav.js"></script>
+
+    <div class="page-wrapper">
+        <div class="container">
+            <header>
+                <h2>會員個人中心</h2>
+                <a href="#" id="logoutBtn" class="logout-btn">登出帳號</a>
+            </header>
+
+            <div class="main-layout">
+                <div class="side-panels">
+                    <section>
+                        <h3>身分驗證區</h3>
+                        <div class="auth-status">
+                            <span>悠遊付帳戶授權</span>
+                            <span class="status-tag">已授權存取</span>
+                        </div>
+                        <p style="font-size: 0.8rem; color: var(--muted); margin-top: 10px;">
+                            確保系統能合法取得刷卡紀錄並進行匿名化處理。
+                        </p>
+                    </section>
+
+                    <section>
+                        <h3>卡片管理 (1 / 20)</h3>
+                        <div class="easycard-image-wrapper">
+                            <img src="../image/S__157048835.jpg" alt="悠遊卡" style="width: 100%; border-radius: 12px; border: 2px solid var(--white); box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                        </div>
+                        <div class="card-list-scroll">
+                            <div class="card-item-small">
+                                <strong>我的學生證</strong>
+                                <span>848*** ***</span>
+                            </div>
+                        </div>
+
+                        <div class="balance-box">
+                            <div class="balance-label">卡片餘額 (非即時更新)</div>
+                            <div class="balance-amount">$288</div>
+                        </div>
+
+                        <button style="width: 100%; padding: 10px; margin-top: 10px; border-radius: 8px; border: 1px dashed var(--accent); background: none; color: var(--accent); cursor: pointer;">+ 綁定新卡片</button>
+                    </section>
+                </div>
+
+                <div class="panel-records">
+                    <section style="background: var(--white); border: none; padding: 0;">
+                        <h3>搭乘歷史紀錄</h3>
+                        <div class="record-item" onclick="openDetail('台北捷運', '2025/12/23 08:30', '忠孝復興站', '20', '5.2 km', '0.040 kg/km')">
+                            <div>
+                                <span class="transport-tag">台北捷運</span>
+                                <strong>忠孝復興站</strong>
+                                <div style="font-size: 0.8rem; color: var(--muted); margin-top: 4px;">2025/12/23 08:30</div>
+                            </div>
+                            <div style="font-weight: bold; color: var(--logout-red);">-$20</div>
+                        </div>
+
+                        <div class="record-item" onclick="openDetail('市區公車', '2025/12/22 17:45', '307路', '15', '3.5 km', '0.060 kg/km')">
+                            <div>
+                                <span class="transport-tag">市區公車</span>
+                                <strong>307路 公車</strong>
+                                <div style="font-size: 0.8rem; color: var(--muted); margin-top: 4px;">2025/12/22 17:45</div>
+                            </div>
+                            <div style="font-weight: bold; color: var(--logout-red);">-$15</div>
+                        </div>
+
+                        <div class="record-item" onclick="openDetail('公共自行車', '2025/12/22 12:10', '捷運公館站', '5', '1.2 km', '0.000 kg/km')">
+                            <div>
+                                <span class="transport-tag">YouBike</span>
+                                <strong>YouBike 2.0</strong>
+                                <div style="font-size: 0.8rem; color: var(--muted); margin-top: 4px;">2025/12/22 12:10</div>
+                            </div>
+                            <div style="font-weight: bold; color: var(--logout-red);">-$5</div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h3>個性化設定</h3>
+                        <div class="setting-item">
+                            <span>是否願意讓朋友搶奪您的碳幣？</span>
+                            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                        </div>
+                        <div class="setting-item">
+                            <span>公開排行榜名次</span>
+                            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                        </div>
+                        <div class="setting-item">
+                            <span>分享通勤數據供政策分析</span>
+                            <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <h2 id="m-title" style="color: var(--accent-dark); margin-bottom: 5px;"></h2>
+            <p id="m-time" style="font-size: 0.9rem; color: var(--muted);"></p>
+            <div class="coef-box">
+                <div style="margin-bottom: 8px;">預估里程：<strong id="m-km"></strong></div>
+                <div>碳排係數：<strong id="m-coef"></strong></div>
+            </div>
+            <p style="font-size: 0.9rem;">本次行程總扣款：<span id="m-cost" style="color: var(--logout-red); font-weight: bold;"></span> 元</p>
+            <button onclick="closeDetail()" style="margin-top: 20px; width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold;">關閉詳情</button>
+        </div>
+    </div>
+
+    <script>
+        function openDetail(title, time, place, cost, km, coef) {
+            document.getElementById('m-title').innerText = title + ' - ' + place;
+            document.getElementById('m-time').innerText = time;
+            document.getElementById('m-cost').innerText = cost;
+            document.getElementById('m-km').innerText = km;
+            document.getElementById('m-coef').innerText = coef;
+            document.getElementById('detailModal').style.display = 'flex';
+        }
+
+        function closeDetail() {
+            document.getElementById('detailModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('detailModal')) closeDetail();
+        }
+
+        // --- 2. 登出功能 (新增的部分) ---
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault(); // 阻止連結預設跳轉行為
+
+            // 確認是否要登出
+            if (confirm('確定要登出嗎？')) {
+                // 清除登入狀態
+                localStorage.removeItem('isLoggedIn');
+                
+                // (選用) 如果有儲存使用者名稱或其他資訊，也可以一併清除
+                // localStorage.clear(); // 小心使用，這會清空所有資料
+
+                // 跳轉回未登入首頁 (homepage.html)
+                window.location.href = '../homepage.html';
+            }
+        });
+    </script>
+</body>
+</html>

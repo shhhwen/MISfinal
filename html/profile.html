@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>會員介面</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    body{font-family:Segoe UI,Arial;background:#fff;color:#064e3b;margin:0}
+    .wrap{max-width:1000px;margin:28px auto;padding:20px}
+    .card{background:#f8fffb;padding:14px;border-radius:12px;margin-top:12px}
+    .small{color:#6b7280}
+    .list{margin-top:8px}
+    table{width:100%;border-collapse:collapse}
+    td,th{padding:8px;border-bottom:1px solid #eef7f0}
+    .btn{background:#10b981;color:#fff;padding:6px 8px;border-radius:8px;border:none}
+  </style>
+</head>
+<body>
+  <div id="site-nav"></div>
+  <script src="../js/nav.js"></script>
+  <div class="wrap">
+    <h2>會員介面</h2>
+
+    <div class="card">
+      <h4>身分驗證（悠遊付）</h4>
+      <div class="small">管理授權以取得刷卡紀錄（示意）</div>
+      <div style="margin-top:8px"><button class="btn">連接悠遊付帳戶</button></div>
+    </div>
+
+    <div class="card">
+      <h4>卡片管理</h4>
+      <div class="small">已綁定卡片（最多 20 張）</div>
+      <div class="list" id="cards"></div>
+      <div style="margin-top:8px"><button class="btn" onclick="addCard()">綁定新卡</button></div>
+    </div>
+
+    <div class="card">
+      <h4>搭乘歷史</h4>
+      <table><thead><tr><th>日期</th><th>運具</th><th>地點/商家</th><th>金額</th></tr></thead><tbody id="history"></tbody></table>
+    </div>
+  </div>
+
+  <script>
+    const cards = [{id:'card1',name:'我的悠遊卡'}]; const cardsEl = document.getElementById('cards'); function renderCards(){cardsEl.innerHTML='';cards.forEach(c=>{const d=document.createElement('div');d.className='small';d.textContent = c.name + ' ('+c.id+')'; cardsEl.appendChild(d)})}
+    function addCard(){const n = prompt('輸入卡片名稱'); if(n){cards.push({id:'card'+(cards.length+1),name:n}); renderCards();}}
+
+    const history = [{d:'2025-12-20',v:'捷運',place:'台北車站',amt:'$20'},{d:'2025-12-21',v:'公車',place:'市府路口',amt:'$15'}]; const histEl = document.getElementById('history'); history.forEach(h=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${h.d}</td><td>${h.v}</td><td>${h.place}</td><td>${h.amt}</td>`;histEl.appendChild(tr)})
+    renderCards();
+  </script>
+</body>
+</html>

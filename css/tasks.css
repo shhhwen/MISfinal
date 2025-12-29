@@ -1,0 +1,248 @@
+/* --- 共用變數與基礎設定 --- */
+:root {
+  --primary: #064e3b;
+  --accent: #10b981;
+  --bg-light: #f3f4f6;
+  --text-muted: #6b7280;
+}
+
+body {
+  margin: 0;
+  font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  /* 加入像圖片中的大面積綠色漸層背景 */
+  background: 
+      linear-gradient(180deg, #bbf7d0 0%, #f0fdf4 400px, #f0fdf4 100%),
+      radial-gradient(circle at top right, #86efac 0%, transparent 30%);
+  background-attachment: fixed;
+  color: var(--dark);
+}
+
+.wrap {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 0 20px;
+  padding-bottom: 60px;
+}
+
+/* --- 卡片通用樣式 --- */
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom: 20px;
+}
+
+.card-title {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.small {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.text-accent {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.mt-4 { margin-top: 24px; }
+.mb-3 { margin-bottom: 16px; }
+
+/* --- 頁面頭部 --- */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.page-header h2 { margin: 0 0 5px 0; }
+
+.stats-card {
+  background: #fff;
+  padding: 10px 20px;
+  border-radius: 12px;
+  text-align: right;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.stats-label { font-size: 12px; color: var(--text-muted); }
+.stats-value { font-size: 24px; font-weight: 800; line-height: 1.2; }
+
+/* --- 任務列表樣式 (核心修改區) --- */
+.task-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background 0.3s;
+  /* 新增: 讓子元素間距固定，避免擁擠 */
+  gap: 16px; 
+}
+
+.task-item:last-child { border-bottom: none; }
+.task-item:hover { background-color: #f9fafb; }
+.task-item.completed { opacity: 0.6; }
+
+/* 1. 圖示區域 */
+.task-icon {
+  font-size: 32px;
+  width: 48px; /* 固定寬度，確保圖示對齊 */
+  text-align: center;
+  flex-shrink: 0; /* 防止縮小 */
+}
+
+/* 2. 中間資訊區域 (標題、描述、進度) */
+.task-info { 
+  flex: 1; /* 佔據剩餘空間 */
+  min-width: 0; /* 防止文字過長爆版 */
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* 垂直置中 */
+  margin-bottom: 4px;
+}
+
+.task-title { 
+  font-weight: 700; 
+  font-size: 16px; 
+  /* 文字過長時省略 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 3. 獎勵文字對齊 */
+.task-reward { 
+  color: var(--accent); 
+  font-weight: 600; 
+  font-size: 14px;
+  /* 新增: 固定最小寬度並靠右，讓所有獎勵在垂直線上對齊 */
+  min-width: 80px; 
+  text-align: right; 
+  flex-shrink: 0;
+}
+
+.task-desc { 
+  font-size: 13px; 
+  color: var(--text-muted); 
+  margin-bottom: 10px; /* 增加與進度條的距離 */
+}
+
+/* 4. 進度條對齊 */
+.progress-bg {
+  background: #e5e7eb;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.progress-bar {
+  background: var(--accent);
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+/* 5. 按鈕/狀態區域對齊 */
+.task-action {
+  /* 新增: 設定固定最小寬度，讓右側按鈕整齊排列 */
+  min-width: 100px; 
+  text-align: right; /* 內容靠右 */
+  flex-shrink: 0;
+}
+
+/* 領取按鈕 */
+.btn-claim {
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: default;
+  font-size: 13px;
+  transition: all 0.2s;
+  white-space: nowrap;
+  width: 100%; /* 讓按鈕填滿 task-action 設定的寬度 */
+  box-sizing: border-box;
+}
+
+/* 按鈕狀態：不可領取 */
+.btn-claim:disabled {
+  background: #f3f4f6;
+  color: #9ca3af;
+}
+
+/* 按鈕狀態：可領取 */
+.btn-claim.active {
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
+  animation: pulse 2s infinite;
+}
+
+.btn-claim.active:hover {
+  background: #059669;
+  transform: translateY(-2px);
+}
+
+/* 按鈕狀態：已領取 */
+.btn-claim.disabled {
+  background: transparent;
+  border: 1px solid #d1d5db;
+  color: #9ca3af;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* --- 歷史紀錄列表樣式 --- */
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px dashed #e5e7eb;
+  font-size: 14px;
+}
+.history-item:last-child { border-bottom: none; }
+
+.history-date { color: var(--text-muted); width: 100px; }
+.history-detail { flex: 1; font-weight: 500; }
+.history-coin { width: 60px; text-align: right; }
+
+/* --- 手機版響應式 --- */
+@media (max-width: 600px) {
+  .page-header { flex-direction: column; align-items: flex-start; }
+  .stats-card { width: 100%; box-sizing: border-box; margin-top: 10px; }
+  
+  /* 手機版改回垂直堆疊 */
+  .task-item { 
+    flex-wrap: wrap; 
+    gap: 12px;
+  }
+  .task-icon { margin-bottom: 0; }
+  .task-info { 
+    width: calc(100% - 60px); /* 扣掉 icon 寬度 */
+    margin-right: 0; 
+  }
+  .task-action { 
+    width: 100%; 
+    min-width: auto;
+    margin-top: 4px;
+  }
+}

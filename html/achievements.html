@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>成就系統</title>
+    <link rel="stylesheet" href="../css/achievements.css">
+</head>
+<body>
+    <div id="site-nav"></div>
+    <script src="../js/nav.js"></script>
+
+    <div class="main-container">
+        <div class="header-section">
+            <span class="badge-count">成就達成進度：6 / 23</span>
+            <h1>榮譽成就</h1>
+            <p>您的每一次綠色搭乘，都在此匯聚成耀眼的榮譽</p>
+        </div>
+
+        <div class="category-filter">
+            <button class="filter-btn active" onclick="filterCategory('all', this)">全部成就</button>
+            <button class="filter-btn" onclick="filterCategory('unlocked', this)">🏆 已達成</button>
+            <button class="filter-btn" onclick="filterCategory('behavior', this)">行為</button>
+            <button class="filter-btn" onclick="filterCategory('milestone', this)">里程碑</button>
+            <button class="filter-btn" onclick="filterCategory('social', this)">社群</button>
+            <button class="filter-btn" onclick="filterCategory('champion', this)">好友之冠</button>
+        </div>
+
+        <div class="badge-grid" id="badgeGrid">
+            
+            <div class="badge-card behavior unlocked" onclick="openModal('初次體驗', '🚀', '行為成就', '完成首次大眾運輸通勤並成功記錄。', '已達成', '1 / 1 次')">
+                <div class="card-type behavior-tag">行為</div>
+                <div class="badge-visual">🚀</div>
+                <div class="badge-name">初次體驗</div>
+                <div class="progress-bar"><div class="fill" style="width: 100%;"></div></div>
+                <p class="status-text">已達成</p>
+            </div>
+
+            <div class="badge-card behavior unlocked" onclick="openModal('第一顆碳 Bee', '🥚', '行為成就', '成功孵化您的第一顆「碳 Bee」蛋。', '2025/11/24', '100%')">
+                <div class="card-type behavior-tag">行為</div>
+                <div class="badge-visual">🥚</div>
+                <div class="badge-name">第一顆碳 Bee </div>
+                <div class="progress-bar"><div class="fill" style="width: 100%;"></div></div>
+                <p class="status-text">已達成</p>
+            </div>
+
+            <div class="badge-card behavior unlocked" onclick="openModal('首購族', '🎁', '行為成就', '累計獲得的「碳幣」足以在商城兌換第一件獎勵。', '2025/12/01', '1 / 1 件')">
+                <div class="card-type behavior-tag">行為</div>
+                <div class="badge-visual">🎁</div>
+                <div class="badge-name">首購族</div>
+                <div class="progress-bar"><div class="fill" style="width: 100%;"></div></div>
+                <p class="status-text">已達成</p>
+            </div>
+
+            <div class="badge-card behavior" onclick="openModal('搭乘收集趣', '🚲', '行為成就', '在同一週內分別完成捷運、公車與公共自行車的紀錄。', '進行中', '2 / 3 種')">
+                <div class="card-type behavior-tag">行為</div>
+                <div class="badge-visual">🚲</div>
+                <div class="badge-name">搭乘收集趣</div>
+                <div class="progress-bar"><div class="fill" style="width: 66%;"></div></div>
+            </div>
+
+            <div class="badge-card behavior" onclick="openModal('YouBike 達人', '🚴', '行為成就', '累計騎乘公共自行車達 10 次。', '尚未達成', '4 / 10 次')">
+                <div class="card-type behavior-tag">行為</div>
+                <div class="badge-visual">🚴</div>
+                <div class="badge-name">YouBike 達人</div>
+                <div class="progress-bar"><div class="fill" style="width: 40%;"></div></div>
+            </div>
+
+            <div class="badge-card behavior" onclick="openModal('綠色全勤獎', '📅', '行為成就', '週一至週五每天都有成功的減碳紀錄。', '進行中', '3 / 5 天')">
+                <div class="card-type behavior-tag">行為</div>
+                <div class="badge-visual">📅</div>
+                <div class="badge-name">綠色全勤獎</div>
+                <div class="progress-bar"><div class="fill" style="width: 60%;"></div></div>
+            </div>
+
+            <div class="badge-card behavior" onclick="openModal('使用AI 路線', '🤖', '行為成就', '成功採用「AI 路線推薦」建議的最佳減碳路線 5 次。', '尚未達成', '1 / 5 次')">
+                <div class="card-type behavior-tag">行為</div>
+                <div class="badge-visual">🤖</div>
+                <div class="badge-name">使用AI 路線</div>
+                <div class="progress-bar"><div class="fill" style="width: 20%;"></div></div>
+            </div>
+
+            <div class="badge-card behavior" onclick="openModal('連續登入', '✨', '行為成就', '連續登入 7 天並開啟成就介面查看進度。', '進行中', '5 / 7 天')">
+                <div class="card-type behavior-tag">行為</div>
+                <div class="badge-visual">✨</div>
+                <div class="badge-name">連續登入</div>
+                <div class="progress-bar"><div class="fill" style="width: 71%;"></div></div>
+            </div>
+
+            <div class="badge-card milestone unlocked" onclick="openModal('減碳目標1', '🌱', '里程碑', '累積減碳量達 10 公斤。相當於種下 1 棵樹！', '已達成', '10 / 10 kg')">
+                <div class="card-type milestone-tag">里程碑</div>
+                <div class="badge-visual">🌱</div>
+                <div class="badge-name">減碳目標1</div>
+                <div class="progress-bar"><div class="fill" style="width: 100%;"></div></div>
+                <p class="status-text">已達成</p>
+            </div>
+
+            <div class="badge-card milestone" onclick="openModal('減碳目標2', '🌳', '里程碑', '累積減碳量達 100 公斤。相當於擁有 10 棵樹。', '進行中', '65 / 100 kg')">
+                <div class="card-type milestone-tag">里程碑</div>
+                <div class="badge-visual">🌳</div>
+                <div class="badge-name">減碳目標2</div>
+                <div class="progress-bar"><div class="fill" style="width: 65%;"></div></div>
+            </div>
+
+            <div class="badge-card milestone" onclick="openModal('減碳目標3', '🌍', '里程碑', '累積減碳量達 500 公斤。省下汽車一年碳排。', '挑戰中', '120 / 500 kg')">
+                <div class="card-type milestone-tag">里程碑</div>
+                <div class="badge-visual">🌍</div>
+                <div class="badge-name">減碳目標3</div>
+                <div class="progress-bar"><div class="fill" style="width: 24%;"></div></div>
+            </div>
+
+            <div class="badge-card milestone" onclick="openModal('鐵道遠征王', '🚇', '里程碑', '累計搭乘捷運達 500 公里。', '挑戰中', '310 / 500 km')">
+                <div class="card-type milestone-tag">里程碑</div>
+                <div class="badge-visual">🚇</div>
+                <div class="badge-name">鐵道遠征王</div>
+                <div class="progress-bar"><div class="fill" style="width: 62%;"></div></div>
+            </div>
+
+            <div class="badge-card milestone" onclick="openModal('騎乘大師', '🚲', '里程碑成就', '累計騎乘 YouBike 總里程達 50 公里。', '挑戰中', '12 / 50 km')">
+                <div class="card-type milestone-tag">里程碑</div>
+                <div class="badge-visual">🚲</div>
+                <div class="badge-name">騎乘大師</div>
+                <div class="progress-bar"><div class="fill" style="width: 24%;"></div></div>
+            </div>
+
+            <div class="badge-card social unlocked" onclick="openModal('榮譽推手', '📱', '社群成就', '分享成就到社群平台 5 次。', '已達成', '5 / 5 次')">
+                <div class="card-type social-tag">社群</div>
+                <div class="badge-visual">📱</div>
+                <div class="badge-name">榮譽推手</div>
+                <div class="progress-bar"><div class="fill" style="width: 100%;"></div></div>
+                <p class="status-text">已達成</p>
+            </div>
+
+            <div class="badge-card social" onclick="openModal('綠能外交官', '🤝', '社群成就', '成功新增 5 位好友。', '進行中', '3 / 5 位')">
+                <div class="card-type social-tag">社群</div>
+                <div class="badge-visual">🤝</div>
+                <div class="badge-name">綠能外交官</div>
+                <div class="progress-bar"><div class="fill" style="width: 60%;"></div></div>
+            </div>
+
+            <div class="badge-card social" onclick="openModal('常勝將軍', '⚔️', '社群成就', '挑戰好友競賽成功達 3 次。', '進行中', '1 / 3 次')">
+                <div class="card-type social-tag">社群</div>
+                <div class="badge-visual">⚔️</div>
+                <div class="badge-name">常勝將軍</div>
+                <div class="progress-bar"><div class="fill" style="width: 33%;"></div></div>
+            </div>
+
+            <div class="badge-card social" onclick="openModal('綠色播種者', '📣', '社群成就', '成功邀請 3 位新朋友註冊。', '進行中', '1 / 3 位')">
+                <div class="card-type social-tag">社群</div>
+                <div class="badge-visual">📣</div>
+                <div class="badge-name">綠色播種者</div>
+                <div class="progress-bar"><div class="fill" style="width: 33%;"></div></div>
+            </div>
+
+            <div class="badge-card social" onclick="openModal('人氣明星', '⭐', '社群成就', '好友列表達到 20 人。', '進行中', '12 / 20 位')">
+                <div class="card-type social-tag">社群</div>
+                <div class="badge-visual">⭐</div>
+                <div class="badge-name">人氣明星</div>
+                <div class="progress-bar"><div class="fill" style="width: 60%;"></div></div>
+            </div>
+
+            <div class="badge-card social" onclick="openModal('排行榜王', '🏆', '社群成就', '在排行榜中連續 4 週進入前 5 名。', '進行中', '2 / 4 週')">
+                <div class="card-type social-tag">社群</div>
+                <div class="badge-visual">🏆</div>
+                <div class="badge-name">排行榜王</div>
+                <div class="progress-bar"><div class="fill" style="width: 50%;"></div></div>
+            </div>
+
+            <div class="badge-card champion unlocked" onclick="openModal('綠色耐力王', '🏃', '好友之冠', '好友圈中維持連續通勤天數最長的人。', '已達成', '15 天')">
+                <div class="card-type champion-tag">之冠</div>
+                <div class="badge-visual">🏃</div>
+                <div class="badge-name">綠色耐力王</div>
+                <div class="progress-bar"><div class="fill" style="width: 100%;"></div></div>
+                <p class="status-text">已達成</p>
+            </div>
+
+            <div class="badge-card champion glow" onclick="openModal('減碳衛冕者', '👑', '好友之冠', '連續三週在排行榜蟬聯第一。', '進行中', '2 / 3 週')">
+                <div class="card-type champion-tag">之冠</div>
+                <div class="badge-visual">👑</div>
+                <div class="badge-name">減碳衛冕者</div>
+                <div class="progress-bar"><div class="fill" style="width: 66%;"></div></div>
+            </div>
+
+            <div class="badge-card champion" onclick="openModal('超越巔峰', '🏔️', '好友之冠', '單週減碳紀錄超過好友歷史最高紀錄。', '挑戰中', '35 / 50 kg')">
+                <div class="card-type champion-tag">之冠</div>
+                <div class="badge-visual">🏔️</div>
+                <div class="badge-name">超越巔峰</div>
+                <div class="progress-bar"><div class="fill" style="width: 70%;"></div></div>
+            </div>
+
+            <div class="badge-card champion" onclick="openModal('碳幣冠軍', '🐑', '好友之冠', '好友中碳幣數最多的人。', '進行中', '120 / 300 幣')">
+                <div class="card-type champion-tag">之冠</div>
+                <div class="badge-visual">🐑</div>
+                <div class="badge-name">碳幣冠軍</div>
+                <div class="progress-bar"><div class="fill" style="width: 24%;"></div></div>
+            </div>
+
+        </div>
+    </div> <div id="badgeModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeBtn()">&times;</span>
+            <div id="modalIcon" style="font-size: 5rem; margin-bottom: 15px;"></div>
+            <h2 id="modalTitle"></h2>
+            <p id="modalCategory"></p>
+            <p id="modalDesc"></p>
+            <div class="modal-stats">
+                <div class="stat-box"><span id="modalProgress" class="stat-main"></span><span class="stat-sub">達成進度</span></div>
+                <div class="stat-box"><span id="modalDate" class="stat-main"></span><span class="stat-sub">目前狀態</span></div>
+            </div>
+            <button class="share-btn" onclick="closeBtn()">我知道了</button>
+        </div>
+    </div>
+
+    <script>
+        function filterCategory(category, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const cards = document.querySelectorAll('.badge-card');
+            cards.forEach(card => {
+                if (category === 'all') {
+                    card.style.display = "flex";
+                } else if (category === 'unlocked') {
+                    card.style.display = card.classList.contains('unlocked') ? "flex" : "none";
+                } else {
+                    card.style.display = card.classList.contains(category) ? "flex" : "none";
+                }
+            });
+        }
+
+        const modal = document.getElementById('badgeModal');
+        function openModal(title, icon, category, desc, status, progress) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalIcon').innerText = icon;
+            document.getElementById('modalCategory').innerText = category;
+            document.getElementById('modalDesc').innerText = desc;
+            document.getElementById('modalDate').innerText = status;
+            document.getElementById('modalProgress').innerText = progress;
+
+            const catElem = document.getElementById('modalCategory');
+            if(category === '任務成就') catElem.style.color = "#E63946";
+            else if(category === '好友之冠') catElem.style.color = "#D4AF37";
+            else if(category === '社群成就') catElem.style.color = "#5A189A";
+            else if(category === '行為成就') catElem.style.color = "#0369A1";
+            else catElem.style.color = "#15803D";
+
+            modal.style.display = "flex";
+        }
+
+        function closeBtn() { modal.style.display = "none"; }
+        window.onclick = function(event) { if (event.target == modal) closeBtn(); }
+    </script>
+</body>
+</html>
