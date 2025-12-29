@@ -2,27 +2,34 @@
   const navMount = document.getElementById('site-nav');
   if (!navMount) return;
 
-  // --- 1. 狀態判定 ---
+  // --- 1. 狀態判定與路徑修正 (關鍵修改) ---
   const path = location.pathname.split('/').pop() || 'index.html';
   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
-  // --- 2. 注入導覽列、跑馬燈與登入提示彈窗 ---
+  // 判斷當前頁面是否在 html 資料夾內
+  // 如果網址包含 '/html/'，代表在內層，需要 '../' 往上跳
+  // 如果沒有，代表在根目錄，使用 './' (當前目錄)
+  const isInHtmlFolder = window.location.pathname.includes('/html/');
+  const rootPath = isInHtmlFolder ? '../' : './'; 
+
+  // --- 2. 注入導覽列 ---
+  // 注意：下方的 href 全部都改成了 ${rootPath} 開頭
   navMount.innerHTML = `
     <nav id="site-nav-inner">
       <div class="nav-wrap">
-        <a class="logo" href="${isLoggedIn ? '../index.html' : '../homepage.html'}">碳 Bee</a>
+        <a class="logo" href="${rootPath}${isLoggedIn ? 'index.html' : 'homepage.html'}">碳 Bee</a>
         <div class="nav-right">
           <div class="links">
-            <a href="../index.html">首頁</a>
-            <a href="../html/ai_route.html">AI 推薦</a>
-            <a href="../html/tasks.html">任務</a>
-            <a href="../html/achievements.html">成就</a>
-            <a href="../html/rewards.html">商城</a>
-            <a href="../html/game.html">遊戲</a>
-            <a href="../html/member.html">會員</a>
+            <a href="${rootPath}index.html">首頁</a>
+            <a href="${rootPath}html/ai_route.html">AI 推薦</a>
+            <a href="${rootPath}html/tasks.html">任務</a>
+            <a href="${rootPath}html/achievements.html">成就</a>
+            <a href="${rootPath}html/rewards.html">商城</a>
+            <a href="${rootPath}html/game.html">遊戲</a>
+            <a href="${rootPath}html/member.html">會員</a>
           </div>
           ${!isLoggedIn ? `
-            <a href="../html/auth.html" class="nav-user-icon" title="登入/註冊">
+            <a href="${rootPath}html/auth.html" class="nav-user-icon" title="登入/註冊">
               <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
@@ -52,10 +59,10 @@
     </div>
   `;
 
-  // --- 3. 注入 CSS ---
+  // --- 3. 注入 CSS (這裡也要用 rootPath 修正圖片路徑) ---
   const style = document.createElement('style');
 
-  const indexOnlyBg = (path === 'index.html') ? `
+  const indexOnlyBg = (path === 'index.html' || path === '') ? `
     body::before {
       content: "";
       position: absolute;
@@ -63,7 +70,8 @@
       left: 0; 
       right: 0; 
       height: 550px; 
-      background-image: url("../image/upbackground.png") !important;
+      /* 注意這裡：如果是在 html 資料夾，要用 ../image，如果在根目錄，要用 ./image */
+      background-image: url("${rootPath}image/upbackground.png") !important;
       background-repeat: no-repeat;
       background-position: right top; 
       background-size: auto 500px; 
@@ -105,7 +113,7 @@
 
     /* 跑馬燈樣式 (Marquee) */
     .marquee-container {
-      background: #059669; /* 使用深綠色背景 */
+      background: #059669; 
       color: white;
       padding: 10px 0;
       font-size: 0.9rem;
@@ -147,17 +155,27 @@
   allNavLinks.forEach(link => {
     // A. 設定 Active 樣式
     const linkHref = link.getAttribute('href');
-    // 如果路徑包含 linkHref，則加上 active (修正相對路徑判定)
-    if (path.includes(linkHref.split('/').pop())) {
-      link.classList.add('active');
+    // 因為 href 現在包含 ./ 或 ../，我們只比對檔名
+    const linkFilename = linkHref.split('/').pop();
+    
+    // 如果當前路徑包含該檔名，則 Active (排除首頁 index.html 的誤判)
+    if (path.includes(linkFilename) && linkFilename !== '') {
+       link.classList.add('active');
+    }
+    // 特殊處理首頁
+    if ((path === 'index.html' || path === '') && linkFilename === 'index.html') {
+       link.classList.add('active');
     }
 
     // B. 攔截點擊
     link.addEventListener('click', function(e) {
       if (!isLoggedIn) {
-        // 如果未登入，且點擊的不是首頁（防止首頁點首頁也跳彈窗，若需要全部攔截則不判斷路徑）
-        e.preventDefault();
-        modal.style.display = 'flex';
+         // 如果未登入，且點擊的不是首頁 (防止首頁點首頁也跳彈窗)
+         // 這裡簡單用 innerText 判斷，或是你可以比對 href
+         if (link.innerText !== '首頁') {
+            e.preventDefault();
+            modal.style.display = 'flex';
+         }
       }
     });
   });
@@ -167,7 +185,8 @@
     modal.style.display = 'none';
   };
 
+  // 修正：彈窗裡的「立即登入」按鈕也要吃 rootPath
   document.getElementById('goToLoginBtn').onclick = () => {
-    window.location.href = '../html/auth.html';
+    window.location.href = `${rootPath}html/auth.html`;
   };
 })();
