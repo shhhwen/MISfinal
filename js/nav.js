@@ -124,11 +124,22 @@
     }
 
     /* RWD 手機版樣式 */
-    @media(max-width: 850px) { 
+@media(max-width: 850px) { 
         /* 顯示漢堡按鈕 */
-        #mobile-menu-btn { display: block; order: 2; }
-        .nav-right { order: 3; } /* 確保 user icon 在最右邊 */
-        .logo { order: 1; }
+        #mobile-menu-btn { 
+            display: block; 
+            order: 3; /* 修改這裡：原本是 2，改成 3 (變成最後一個) */
+            margin-left: 10px; /* 增加一點左邊距，跟頭像保持距離 */
+        }
+        
+        .nav-right { 
+            order: 2; /* 修改這裡：原本是 3，改成 2 (變成中間) */
+        } 
+        
+        .logo { 
+            order: 1; /* Logo 維持在最左邊 */
+            margin-right: auto; /* 確保 Logo 把後面兩個元素推到最右邊 */
+        }
 
         /* 隱藏桌機版連結，改為下拉選單樣式 */
         #site-nav-inner .links { 
