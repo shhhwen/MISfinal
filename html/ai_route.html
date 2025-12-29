@@ -165,33 +165,21 @@
 </div>
 
 <script>
-// 1. 係數定義
+// 1. 係數定義 (新增 HSR:高鐵)
 const EF_TABLE = { 
-    "BUS": 0.040, "MRT": 0.040, "TRAIN": 0.060, 
+    "BUS": 0.040, "MRT": 0.040, "TRAIN": 0.060, "HSR": 0.038,
     "TAXI": 0.133, "CAR": 0.115, "MOTO": 0.0951, "WALK": 0.000 
 };
-const ICONS = { "MRT": "subway", "BUS": "bus", "WALK": "walking", "CAR": "car", "TRAIN": "train", "TAXI": "taxi", "MOTO": "motorcycle" };
+// 新增 HSR 圖示
+const ICONS = { "MRT": "subway", "BUS": "bus", "WALK": "walking", "CAR": "car", "TRAIN": "train", "HSR": "train-subway", "TAXI": "taxi", "MOTO": "motorcycle" };
 
+// 2. 路線資料庫 (保留舊的 + 新增6條)
 const routesData = {
-"TPE_101": { dist: 6.5, options: [
-        { 
-            name: "捷運紅線直達", 
-            segments: [
-                { type: "MRT", desc: "紅線 (北車-101/世貿)", time: 17, cost: 25 }, 
-                { type: "WALK", desc: "步行至 101", time: 4, cost: 0 }
-            ] 
-        },
-        { 
-            name: "捷運藍線轉步行", 
-            segments: [
-                { type: "MRT", desc: "藍線 (北車-市政府)", time: 10, cost: 20 }, 
-                { type: "WALK", desc: "步行 1.1 公里", time: 15, cost: 0 }
-            ] 
-        },
-        { 
-            name: "計程車方案", 
-            segments: [{ type: "TAXI", desc: "經信義路", time: 18, cost: 220 }] 
-        }
+    // === 原有路線保留 ===
+    "TPE_101": { dist: 6.5, options: [
+        { name: "捷運紅線直達", segments: [{ type: "MRT", desc: "紅線 (北車-101/世貿)", time: 17, cost: 25 }, { type: "WALK", desc: "步行至 101", time: 4, cost: 0 }] },
+        { name: "捷運藍線轉步行", segments: [{ type: "MRT", desc: "藍線 (北車-市政府)", time: 10, cost: 20 }, { type: "WALK", desc: "步行 1.1 公里", time: 15, cost: 0 }] },
+        { name: "計程車方案", segments: [{ type: "TAXI", desc: "經信義路", time: 18, cost: 220 }] }
     ]},
     "TPE_RAOHE": { dist: 7.2, options: [
         { name: "台鐵快線方案", segments: [{ type: "TRAIN", desc: "台鐵 (台北-松山)", time: 8, cost: 22 }, { type: "WALK", desc: "步行至饒河街", time: 4, cost: 0 }] },
@@ -200,13 +188,65 @@ const routesData = {
     "TPE_NTU": { dist: 5.2, options: [
         { name: "捷運複合方案", segments: [{ type: "MRT", desc: "紅線 (北車-中正)", time: 6, cost: 25 }, { type: "WALK", desc: "轉乘", time: 2, cost: 0 }, { type: "MRT", desc: "綠線 (中正-公館)", time: 5, cost: 0 }, { type: "WALK", desc: "步行至校門", time: 12, cost: 0 }] },
         { name: "直達公車方案", segments: [{ type: "WALK", desc: "走至站牌", time: 5, cost: 0 }, { type: "BUS", desc: "羅幹線", time: 25, cost: 15 }, { type: "WALK", desc: "步行至校門", time: 5, cost: 0 }] }
+    ]},
+
+    // === 新增路線 ===
+    // 1. 西門町 (Ximen)
+    "TPE_XIMEN": { dist: 2.2, options: [
+        { name: "方案 A (捷運+步行)", segments: [{ type: "MRT", desc: "板南線 (北車-西門)", time: 2, cost: 20 }, { type: "WALK", desc: "步行至紅樓", time: 4, cost: 0 }] },
+        { name: "方案 B (公車)", segments: [{ type: "WALK", desc: "步行", time: 1, cost: 0 }, { type: "BUS", desc: "218路", time: 4, cost: 15 }, { type: "WALK", desc: "步行", time: 5, cost: 0 }] },
+        { name: "方案 C (公車)", segments: [{ type: "WALK", desc: "步行", time: 1, cost: 0 }, { type: "BUS", desc: "310路", time: 5, cost: 15 }, { type: "WALK", desc: "步行", time: 5, cost: 0 }] }
+    ]},
+    // 2. 士林夜市 (Shilin)
+    "TPE_SHILIN": { dist: 5.2, options: [
+        { name: "方案 A (捷運)", segments: [{ type: "MRT", desc: "淡水信義線 (北車-劍潭)", time: 8, cost: 20 }, { type: "WALK", desc: "步行至夜市", time: 6, cost: 0 }] },
+        { name: "方案 B (公車)", segments: [{ type: "WALK", desc: "步行", time: 4, cost: 0 }, { type: "BUS", desc: "260路", time: 18, cost: 15 }, { type: "WALK", desc: "步行", time: 7, cost: 0 }] }
+    ]},
+    // 3. 淡水老街 (Tamsui)
+    "TPE_TAMSUI": { dist: 22.3, options: [
+        { name: "方案 A (捷運)", segments: [{ type: "MRT", desc: "淡水信義線 (北車-淡水)", time: 39, cost: 50 }, { type: "WALK", desc: "步行至老街", time: 4, cost: 0 }] },
+        { name: "方案 B (公車轉乘)", segments: [{ type: "WALK", desc: "步行", time: 7, cost: 0 }, { type: "BUS", desc: "756路", time: 55, cost: 15 }, { type: "WALK", desc: "步行", time: 3, cost: 0 }] }
+    ]},
+    // 4. 南港展覽館 (Nangang)
+    "TPE_NANGANG": { dist: 13.5, options: [
+        { name: "方案 A (捷運)", segments: [{ type: "MRT", desc: "板南線(北車-南港展覽館)", time: 22, cost: 30 }, { type: "WALK", desc: "步行", time: 2, cost: 0 }] },
+        { name: "方案 B (台鐵)", segments: [{ type: "TRAIN", desc: "區間車 (台北-南港)", time: 10, cost: 22 }, { type: "WALK", desc: "步行", time: 17, cost: 0 }] },
+        { name: "方案 C (高鐵)", segments: [{ type: "HSR", desc: "高鐵", time: 8, cost: 40 }, { type: "WALK", desc: "步行", time: 17, cost: 0 }] }
+    ]},
+    // 5. 內湖科學園區 (Neihu)
+    "TPE_NEIHU": { dist: 11.0, options: [
+        { name: "方案 A (捷運轉乘)", segments: [{ type: "MRT", desc: "板南線 (北車-忠孝復興)", time: 6, cost: 20 }, { type: "WALK", desc: "步行", time: 3, cost: 0 }, { type: "MRT", desc: "文湖線 (忠孝復興-西湖)", time: 16, cost: 30 }, { type: "WALK", desc: "步行", time: 13, cost: 0 }] },
+        { name: "方案 B (公車)", segments: [{ type: "WALK", desc: "步行", time: 7, cost: 0 }, { type: "BUS", desc: "內湖幹線", time: 31, cost: 30 }, { type: "WALK", desc: "步行", time: 6, cost: 0 }] },
+        { name: "方案 C (捷運+公車)", segments: [{ type: "MRT", desc: "板南線 (北車-市政府)", time: 11, cost: 20 }, { type: "WALK", desc: "步行", time: 3, cost: 0 }, { type: "BUS", desc: "522路", time: 15, cost: 15 }, { type: "WALK", desc: "步行", time: 3, cost: 0 }] }
+    ]},
+    // 6. 台北市政府 (City Hall)
+    "TPE_CITYHALL": { dist: 5.0, options: [
+        { name: "方案 A (捷運)", segments: [{ type: "MRT", desc: "板南線 (北車-市政府)", time: 10, cost: 20 }, { type: "WALK", desc: "步行", time: 6, cost: 0 }] },
+        { name: "方案 B (公車)", segments: [{ type: "WALK", desc: "步行", time: 4, cost: 0 }, { type: "BUS", desc: "669路", time: 25, cost: 15 }, { type: "WALK", desc: "步行", time: 4, cost: 0 }] }
     ]}
 };
 
 function getRouteKey(target) {
     const t = target.toLowerCase();
-    if (t.includes("101")) return "TPE_101";
-    if (t.includes("饒河")) return "TPE_RAOHE";
+    
+    // 1. 台北 101
+    if (t.includes("101") || t.includes("世貿") || t.includes("信義")) return "TPE_101";
+    // 2. 饒河夜市
+    if (t.includes("饒河") || t.includes("松山")) return "TPE_RAOHE";
+    // 3. 西門町
+    if (t.includes("西門") || t.includes("紅樓")) return "TPE_XIMEN";
+    // 4. 士林夜市
+    if (t.includes("士林") || t.includes("劍潭")) return "TPE_SHILIN";
+    // 5. 淡水老街
+    if (t.includes("淡水") || t.includes("老街")) return "TPE_TAMSUI";
+    // 6. 南港展覽館
+    if (t.includes("南港") || t.includes("展覽館")) return "TPE_NANGANG";
+    // 7. 內湖科學園區
+    if (t.includes("內湖") || t.includes("科學園區") || t.includes("內科")) return "TPE_NEIHU";
+    // 8. 台北市政府
+    if (t.includes("市政府") || t.includes("市府")) return "TPE_CITYHALL";
+
+    // 預設台大
     return "TPE_NTU"; 
 }
 
@@ -252,7 +292,6 @@ function updateUI() {
             (i < opt.segments.length - 1 ? `<i class="fas fa-chevron-right seg-arrow"></i>` : "")
         ).join("") + `</div>`;
 
-        // 注意：這裡加上了 data-label 屬性，這是 RWD 顯示標題的關鍵
         tbody.innerHTML += `<tr>
             <td>
                 <div style="font-size:1.1rem; font-weight:bold;">${opt.name}</div>
