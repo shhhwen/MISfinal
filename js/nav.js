@@ -23,7 +23,7 @@
         <div class="nav-right">
           <div class="links" id="nav-links">
             <a href="${rootPath}index.html">首頁</a>
-            <a href="${rootPath}html/ai_route.html">AI 推薦</a>
+            <a href="${rootPath}html/ai_route.html">路線推薦</a>
             <a href="${rootPath}html/tasks.html">任務</a>
             <a href="${rootPath}html/achievements.html">成就</a>
             <a href="${rootPath}html/rewards.html">商城</a>

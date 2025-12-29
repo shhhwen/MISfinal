@@ -24,18 +24,26 @@
         #site-nav { position: fixed; top: 0; left: 0; width: 100%; z-index: 9999; }
 
         .app-card { 
-            background: rgba(255, 255, 255, 0.9); 
+            background: rgba(255, 255, 255, 0.95); 
             backdrop-filter: blur(15px); 
             width: 90%; max-width: 1100px; 
             padding: 35px; border-radius: 28px; 
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.05); 
             margin: 100px auto 40px auto; 
             border: 1px solid rgba(255, 255, 255, 0.3);
+            box-sizing: border-box; /* 確保 padding 不會撐爆寬度 */
         }
 
         h1 { text-align: center; font-weight: 800; margin-bottom: 30px; border-bottom: 2px solid var(--primary-light); padding-bottom: 15px; }
 
-        .input-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        /* 輸入區 RWD 調整 */
+        .input-section { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 20px; 
+            margin-bottom: 30px; 
+        }
+        
         .control-group { background: rgba(255, 255, 255, 0.5); padding: 20px; border-radius: 20px; border: 1px solid var(--primary-light); }
         
         label { display: block; font-weight: bold; margin-bottom: 8px; color: var(--dark); }
@@ -46,16 +54,72 @@
         }
 
         .route-details { margin-top: 8px; display: flex; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 0.85rem; }
-        .seg-tag { background: var(--primary-light); padding: 3px 10px; border-radius: 8px; color: var(--dark); display: flex; align-items: center; gap: 5px; }
+        .seg-tag { background: var(--primary-light); padding: 3px 10px; border-radius: 8px; color: var(--dark); display: flex; align-items: center; gap: 5px; margin-bottom: 4px; }
         .seg-arrow { color: var(--primary); font-size: 10px; opacity: 0.6; }
 
+        /* 表格與卡片切換樣式 */
         table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 20px; font-size: 14px; }
-        th, td { padding: 16px 12px; text-align: left; border-bottom: 1px solid #ecfdf5; }
+        th, td { padding: 16px 12px; text-align: left; border-bottom: 1px solid #ecfdf5; vertical-align: top; }
         th { background: #f0fdf4; color: var(--dark); font-weight: 700; }
         
-        .recommended-badge { background: var(--primary); color: white; padding: 3px 10px; border-radius: 20px; font-size: 11px; margin-left: 8px; }
+        .recommended-badge { background: var(--primary); color: white; padding: 3px 10px; border-radius: 20px; font-size: 11px; margin-left: 8px; white-space: nowrap; }
         .coin-plus { color: var(--primary); font-weight: 800; }
-        .score-info { font-size: 11px; color: #64748b; margin-top: 4px; }
+        .score-info { font-size: 11px; color: #64748b; margin-top: 4px; white-space: nowrap; }
+
+        /* --- 手機版 RWD (關鍵修改) --- */
+        @media (max-width: 768px) {
+            .app-card { padding: 20px; margin-top: 80px; width: 95%; }
+            
+            .input-section { grid-template-columns: 1fr; gap: 10px; }
+            .control-group { padding: 15px; }
+
+            /* 強制將表格變成卡片列表 */
+            table, thead, tbody, th, td, tr { display: block; }
+            thead tr { position: absolute; top: -9999px; left: -9999px; } /* 隱藏表頭 */
+            
+            tr { 
+                background: white; 
+                border: 1px solid #e5e7eb; 
+                border-radius: 12px; 
+                margin-bottom: 15px; 
+                padding: 15px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            }
+
+            td { 
+                border: none; 
+                padding: 5px 0; 
+                position: relative; 
+                display: flex; /* 讓 label 和 content 並排 */
+                justify-content: space-between;
+                align-items: flex-start;
+                text-align: right;
+            }
+
+            /* 手機版顯示欄位名稱 (Label) */
+            td:before { 
+                content: attr(data-label); 
+                font-weight: bold; 
+                color: var(--dark);
+                margin-right: 15px;
+                text-align: left;
+                flex-shrink: 0; /* 防止 label 被擠壓 */
+            }
+
+            /* 第一欄 (方案名稱) 特殊處理：置頂且大字 */
+            td:first-child { 
+                display: block; 
+                text-align: left; 
+                font-size: 1.1rem; 
+                margin-bottom: 10px; 
+                border-bottom: 1px dashed #eee; 
+                padding-bottom: 10px;
+            }
+            td:first-child:before { display: none; } /* 第一欄不顯示 label */
+            
+            .route-details { margin-top: 10px; }
+            .seg-tag { display: inline-flex; } /* 改回 inline-flex 以便斷行 */
+        }
     </style>
 </head>
 <body>
@@ -64,7 +128,7 @@
 <script src="../js/nav.js"></script>
 
 <div class="app-card">
-    <h1><i class="fas fa-route"></i>推薦路徑</h1>
+    <h1><i class="fas fa-route"></i>路線推薦</h1>
     
     <div class="input-section">
         <div class="control-group">
@@ -160,14 +224,12 @@ function updateUI() {
             t_emission += seg_dist * EF_TABLE[seg.type];
         });
 
-        // 1. 減碳計算
         const e_car_ref = route.dist * 0.115; 
         const carbonSaved = e_car_ref - t_emission;
 
-        // 2. 依照您的最新要求計算分數
-        const s_time = Math.max(0, 100 - t_time);        // 100 - 分鐘
-        const s_cost = Math.max(0, 100 - t_cost);        // 100 - 元
-        const s_carbon = Math.min(100, carbonSaved * 100); // 0.01kg = 1分，上限 100
+        const s_time = Math.max(0, 100 - t_time);
+        const s_cost = Math.max(0, 100 - t_cost);
+        const s_carbon = Math.min(100, carbonSaved * 100);
 
         const totalScore = s_time + s_cost + s_carbon;
 
@@ -180,7 +242,6 @@ function updateUI() {
         };
     });
 
-    // 動態排序：根據選單選擇的屬性由高到低排序
     processedData.sort((a, b) => b[sortCriteria] - a[sortCriteria]);
 
     const tbody = document.getElementById('resultBody');
@@ -191,30 +252,31 @@ function updateUI() {
             (i < opt.segments.length - 1 ? `<i class="fas fa-chevron-right seg-arrow"></i>` : "")
         ).join("") + `</div>`;
 
+        // 注意：這裡加上了 data-label 屬性，這是 RWD 顯示標題的關鍵
         tbody.innerHTML += `<tr>
             <td>
-                <strong>${opt.name}</strong>${index === 0 ? '<span class="recommended-badge">首選方案</span>' : ''}
+                <div style="font-size:1.1rem; font-weight:bold;">${opt.name}</div>
+                ${index === 0 ? '<span class="recommended-badge">首選方案</span>' : ''}
                 ${flowHtml}
             </td>
-            <td>
+            <td data-label="時間 / 費用">
                 <div>${opt.t_time} min</div>
                 <div style="color:#64748b">$${opt.t_cost}</div>
             </td>
-            <td>
+            <td data-label="減碳量 / 碳幣">
                 <div style="color:var(--success)">${opt.carbonSaved} kg</div>
                 <div class="coin-plus">+${opt.coins} 點</div>
             </td>
-            <td>
+            <td data-label="各項得分詳情">
                 <div class="score-info">時間分: ${opt.s_time}</div>
                 <div class="score-info">金錢分: ${opt.s_cost}</div>
                 <div class="score-info">低碳分: ${opt.s_carbon.toFixed(1)}</div>
             </td>
-            <td style="color:var(--primary); font-weight:bold; font-size:1.2rem;">${opt.totalScore}</td>
+            <td data-label="綜合評分" style="color:var(--primary); font-weight:bold; font-size:1.2rem;">${opt.totalScore}</td>
         </tr>`;
     });
 }
 
-// 初始化
 updateUI();
 </script>
 </body>
